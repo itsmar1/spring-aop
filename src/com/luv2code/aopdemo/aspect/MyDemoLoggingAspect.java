@@ -3,44 +3,25 @@ package com.luv2code.aopdemo.aspect;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@Order(2)
 public class MyDemoLoggingAspect {
 
     // this is where we add all of our related advices for logging
 
     // let's start with an @Before advice
 
-    @Pointcut("execution(* com.luv2code.aopdemo.dao.*.*(..))")
-    public void forDaoPackage() {}
 
-
-
-    // create pointcut for getter methods
-    @Pointcut("execution(* com.luv2code.aopdemo.dao.*.get*(..))")
-    public void getter() {}
-
-    // create pointcut for setter methods
-    @Pointcut("execution(* com.luv2code.aopdemo.dao.*.set*(..))")
-    public void setter() {}
-
-    // create point: include package ... exclude getter/setter
-    @Pointcut("forDaoPackage() && !(getter() || setter())")
-    public void forDaoPackageNoGetterSetter() {}
-
-
-
-    @Before("forDaoPackageNoGetterSetter()")
+    @Before("com.luv2code.aopdemo.aspect.LuvAopExpressions.forDaoPackageNoGetterSetter()")
     public void beforeAddAccountAdvice() {
-        System.out.println("\n======>>> Executing @Before advice on method");
+        System.out.println("======>>> Executing @Before advice on method");
     }
 
-    @Before("forDaoPackageNoGetterSetter()")
-    public void performApiAnalytics() {
-        System.out.println("======>>> Performing API analytics");
-    }
+
 
 //    @Before("execution(* com.luv2code.aopdemo.dao.*.*(..))")
 //    public void beforeAddAccountAdvice() {
