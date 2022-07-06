@@ -2,10 +2,7 @@ package com.luv2code.aopdemo.aspect;
 
 import com.luv2code.aopdemo.Account;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -84,6 +81,29 @@ public class MyDemoLoggingAspect {
             tempAccount.setName(theUpperName);
         }
     }
+
+
+
+    @AfterThrowing(
+            pointcut = "execution(* com.luv2code.aopdemo.dao.AccountDAO.findAccounts(..))",
+            throwing = "theExc"
+    )
+    public void afterThrowingFindAccountAdvice(JoinPoint theJoinPoint, Throwable theExc) {
+
+        // print out which method we are advising on
+        String method = theJoinPoint.getSignature().toShortString();
+        System.out.println("======>>> Executing @AfterThrowing on method: " + method);
+
+        // log the exception
+        System.out.println("======>>> The exception is: " + theExc);
+    }
+
+
+
+
+
+
+
 
 
 //    @Before("execution(* com.luv2code.aopdemo.dao.*.*(..))")
