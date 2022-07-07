@@ -9,11 +9,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @Aspect
 @Component
 @Order(2)
 public class MyDemoLoggingAspect {
+
+    private Logger myLogger = Logger.getLogger(getClass().getName());
 
     // this is where we add all of our related advices for logging
 
@@ -22,11 +25,11 @@ public class MyDemoLoggingAspect {
 
     @Before("com.luv2code.aopdemo.aspect.LuvAopExpressions.forDaoPackageNoGetterSetter()")
     public void beforeAddAccountAdvice(JoinPoint theJoinPoint) {
-        System.out.println("======>>> Executing @Before advice on method");
+        myLogger.info("======>>> Executing @Before advice on method");
 
         // display the method signature
         MethodSignature methodSig = (MethodSignature) theJoinPoint.getSignature();
-        System.out.println("Method: " + methodSig);
+        myLogger.info("Method: " + methodSig);
 
         // display method arguments
 
@@ -35,13 +38,13 @@ public class MyDemoLoggingAspect {
 
         // loop through args
         for (Object tempArg : args) {
-            System.out.println(tempArg);
+            myLogger.info(tempArg.toString());
 
             if (tempArg instanceof Account) {
                 // downcast and print Account specific stuff
                 Account theAccount = (Account) tempArg;
-                System.out.println("account name: " + theAccount.getName());
-                System.out.println("account level: " + theAccount.getLevel());
+                myLogger.info("account name: " + theAccount.getName());
+                myLogger.info("account level: " + theAccount.getLevel());
             }
         }
     }
@@ -56,17 +59,17 @@ public class MyDemoLoggingAspect {
 
         // print out which method we are advising on
         String method = theJoinPoint.getSignature().toShortString();
-        System.out.println("======>>> Executing @AfterReturning on method: " + method);
+        myLogger.info("======>>> Executing @AfterReturning on method: " + method);
 
         // print out the results of the method call
-        System.out.println("======>>> result is: " + result);
+        myLogger.info("======>>> result is: " + result);
 
         // let's post-process the data ... let's modify it
 
         // convert the account names to uppercase
         convertAccountNamesToUppercase(result);
 
-        System.out.println("======>>> result is: " + result);
+        myLogger.info("======>>> result is: " + result);
 
     }
 
@@ -93,10 +96,10 @@ public class MyDemoLoggingAspect {
 
         // print out which method we are advising on
         String method = theJoinPoint.getSignature().toShortString();
-        System.out.println("======>>> Executing @AfterThrowing on method: " + method);
+        myLogger.info("======>>> Executing @AfterThrowing on method: " + method);
 
         // log the exception
-        System.out.println("======>>> The exception is: " + theExc);
+        myLogger.info("======>>> The exception is: " + theExc);
     }
 
 
@@ -105,7 +108,7 @@ public class MyDemoLoggingAspect {
 
         // print out which method we are advising on
         String method = theJoinPoint.getSignature().toShortString();
-        System.out.println("======>>> Executing @After (finally) on method: " + method);
+        myLogger.info("======>>> Executing @After (finally) on method: " + method);
 
     }
 
@@ -116,7 +119,7 @@ public class MyDemoLoggingAspect {
 
         // print out method ew are advising on
         String method = theProceedingJoinPoint.getSignature().toShortString();
-        System.out.println("======>>> Executing @Around on method: " + method);
+        myLogger.info("======>>> Executing @Around on method: " + method);
 
         // get begin timestamp
         long begin = System.currentTimeMillis();
@@ -129,7 +132,7 @@ public class MyDemoLoggingAspect {
 
         // compute duration and display it
         long duration = end - begin;
-        System.out.println("======>>> Duration: " + duration / 1000.0 + " seconds");
+        myLogger.info("======>>> Duration: " + duration / 1000.0 + " seconds");
 
         return result;
 
@@ -150,7 +153,7 @@ public class MyDemoLoggingAspect {
 //    @Before("execution(* com.luv2code.aopdemo.dao.*.*(..))")
 //    public void beforeAddAccountAdvice() {
 //
-//        System.out.println("\n======>>> Executing @Before advice on method");
+//        myLogger.info("\n======>>> Executing @Before advice on method");
 //
 //    }
 
